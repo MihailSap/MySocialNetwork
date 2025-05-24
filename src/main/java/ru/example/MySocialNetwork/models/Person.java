@@ -3,6 +3,7 @@ package ru.example.MySocialNetwork.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -20,6 +21,14 @@ public class Person {
     private String username;
 
     private String password;
+
+    private String email;
+
+//    private Date dateOfBirth;
+
+    private String phoneNumber;
+
+    private String address;
 
     @OneToMany
     private List<Post> posts;
