@@ -10,19 +10,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "person")
-public class Person {
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String username;
+    private String title;
 
-    private String password;
+    private String text;
 
-    @OneToMany
-    private List<Post> posts;
+    @ManyToOne
+    private Person person;
 
     @OneToMany
     private List<Comment> comments;

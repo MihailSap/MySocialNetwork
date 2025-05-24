@@ -52,4 +52,8 @@ public class PersonDetails implements UserDetails {
     public Person getPerson() {
         return person;
     }
+
+    public long getId(){
+        return person.getId();
+    }
 }
