@@ -36,15 +36,15 @@ public class CommentService {
         return commentDTO;
     }
 
-    public List<CommentDTO> getComments(long postId){
-        var post = postService.getPost(postId);
-        var comments = post.getComments();
-        List<CommentDTO> commentDTOS = new ArrayList<>();
-        for(var comment : comments){
-            commentDTOS.add(mapToDTO(comment));
-        }
-        return commentDTOS;
-    }
+//    public List<CommentDTO> getComments(long postId){
+//        var post = postService.getPost(postId);
+//        var comments = post.getComments();
+//        List<CommentDTO> commentDTOS = new ArrayList<>();
+//        for(var comment : comments){
+//            commentDTOS.add(mapToDTO(comment));
+//        }
+//        return commentDTOS;
+//    }
 
     @Transactional
     public CommentDTO update(long id, CommentDTO commentDTO){

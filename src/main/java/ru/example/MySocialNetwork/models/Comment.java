@@ -23,5 +23,6 @@ public class Comment {
     private Person person;
 
     @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 }

@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.MySocialNetwork.dto.PostDTO;
+import ru.example.MySocialNetwork.mappers.PostMapper;
 import ru.example.MySocialNetwork.models.Person;
 import ru.example.MySocialNetwork.models.Post;
 import ru.example.MySocialNetwork.repositories.PersonRepository;
@@ -16,11 +17,13 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PersonRepository peopleRepository;
+    private final PostMapper postMapper;
 
     @Autowired
-    public PostService(PostRepository postRepository, PersonRepository personRepository) {
+    public PostService(PostRepository postRepository, PersonRepository personRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
         this.peopleRepository = personRepository;
+        this.postMapper = postMapper;
     }
 
     @Transactional
@@ -33,13 +36,13 @@ public class PostService {
         post.setPerson(activePerson);
         postRepository.save(post);
 
-        return mapToDTO(post);
+        return postMapper.mapToDTO(post);
     }
 
     public PostDTO getPostById(long id){
         var post = postRepository.findById(id)
                 .orElseThrow(() ->  new RuntimeException("Пост с таким id не найден"));
-        return mapToDTO(post);
+        return postMapper.mapToDTO(post);
     }
 
     @Transactional
@@ -48,7 +51,7 @@ public class PostService {
         post.setTitle(postDTO.getTitle());
         post.setText(postDTO.getText());
         postRepository.save(post);
-        return mapToDTO(post);
+        return postMapper.mapToDTO(post);
     }
 
     @Transactional
@@ -61,14 +64,6 @@ public class PostService {
     public Post getPost(long id){
         return postRepository.findById(id)
                 .orElseThrow(() ->  new RuntimeException("Пост с таким id не найден"));
-    }
-
-    public PostDTO mapToDTO(Post post){
-        var postDTO = new PostDTO();
-        postDTO.setId(post.getId());
-        postDTO.setTitle(post.getTitle());
-        postDTO.setText(post.getText());
-        return postDTO;
     }
 
     public Person getActivePerson() {

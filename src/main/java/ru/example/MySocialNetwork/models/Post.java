@@ -23,6 +23,6 @@ public class Post {
     @ManyToOne
     private Person person;
 
-    @OneToMany
+    @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 }
