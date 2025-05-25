@@ -13,5 +13,7 @@ public class PostDTO {
 
     private String text;
 
+    private int likesCount;
+
     private List<CommentDTO> comments;
 }

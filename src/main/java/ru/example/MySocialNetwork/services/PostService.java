@@ -1,30 +1,21 @@
 package ru.example.MySocialNetwork.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.MySocialNetwork.dto.PostDTO;
+import ru.example.MySocialNetwork.exceptions.ForbiddenException;
 import ru.example.MySocialNetwork.mappers.PostMapper;
-import ru.example.MySocialNetwork.models.Person;
 import ru.example.MySocialNetwork.models.Post;
-import ru.example.MySocialNetwork.repositories.PersonRepository;
 import ru.example.MySocialNetwork.repositories.PostRepository;
-import ru.example.MySocialNetwork.security.PersonDetails;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
+    private final PersonService personService;
     private final PostRepository postRepository;
-    private final PersonRepository peopleRepository;
     private final PostMapper postMapper;
-
-    @Autowired
-    public PostService(PostRepository postRepository, PersonRepository personRepository, PostMapper postMapper) {
-        this.postRepository = postRepository;
-        this.peopleRepository = personRepository;
-        this.postMapper = postMapper;
-    }
 
     @Transactional
     public PostDTO create(PostDTO postDTO){
@@ -32,7 +23,7 @@ public class PostService {
         post.setTitle(postDTO.getTitle());
         post.setText(postDTO.getText());
 
-        var activePerson = getActivePerson();
+        var activePerson = personService.getActivePerson();
         post.setPerson(activePerson);
         postRepository.save(post);
 
@@ -48,6 +39,8 @@ public class PostService {
     @Transactional
     public PostDTO update(long id, PostDTO postDTO){
         var post = getPost(id);
+        checkRights(post);
+
         post.setTitle(postDTO.getTitle());
         post.setText(postDTO.getText());
         postRepository.save(post);
@@ -58,6 +51,7 @@ public class PostService {
     public void delete(long id){
         var post = postRepository.findById(id)
                 .orElseThrow(() ->  new RuntimeException("Пост с таким id не найден"));
+        checkRights(post);
         postRepository.delete(post);
     }
 
@@ -66,13 +60,11 @@ public class PostService {
                 .orElseThrow(() ->  new RuntimeException("Пост с таким id не найден"));
     }
 
-    public Person getActivePerson() {
-        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof PersonDetails personDetails) {
-            return peopleRepository.findById(personDetails.getId())
-                    .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+    public void checkRights(Post post){
+        var activePerson = personService.getActivePerson();
+        var owner = post.getPerson();
+        if (!owner.equals(activePerson)) {
+            throw new ForbiddenException("Вы не можете менять чужие посты");
         }
-
-        throw new RuntimeException("Пользователь не авторизован");
     }
 }

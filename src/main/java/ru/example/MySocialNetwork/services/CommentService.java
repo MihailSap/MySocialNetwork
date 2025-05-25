@@ -7,21 +7,19 @@ import ru.example.MySocialNetwork.dto.CommentDTO;
 import ru.example.MySocialNetwork.models.Comment;
 import ru.example.MySocialNetwork.repositories.CommentRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostService postService;
+    private final PersonService personService;
 
     @Transactional
     public CommentDTO create(long postId, CommentDTO commentDTO){
         var comment = new Comment();
         comment.setText(commentDTO.getText());
-        var activePerson = postService.getActivePerson();
+        var activePerson = personService.getActivePerson();
         comment.setPerson(activePerson);
         var post = postService.getPost(postId);
         comment.setPost(post);
@@ -35,16 +33,6 @@ public class CommentService {
         commentDTO.setText(comment.getText());
         return commentDTO;
     }
-
-//    public List<CommentDTO> getComments(long postId){
-//        var post = postService.getPost(postId);
-//        var comments = post.getComments();
-//        List<CommentDTO> commentDTOS = new ArrayList<>();
-//        for(var comment : comments){
-//            commentDTOS.add(mapToDTO(comment));
-//        }
-//        return commentDTOS;
-//    }
 
     @Transactional
     public CommentDTO update(long id, CommentDTO commentDTO){

@@ -1,9 +1,9 @@
 package ru.example.MySocialNetwork.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -22,17 +22,21 @@ public class Person {
 
     private String password;
 
+    @Email
     private String email;
-
-//    private Date dateOfBirth;
 
     private String phoneNumber;
 
     private String address;
 
-    @OneToMany
+    private String birthDate;
+
+    @OneToMany(mappedBy = "person")
     private List<Post> posts;
 
-    @OneToMany
+    @OneToMany(mappedBy = "person")
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "person")
+    private List<Like> likes;
 }

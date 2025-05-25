@@ -19,6 +19,9 @@ public class PostMapper {
 
         var commentDTOs = mapComments(post);
         postDTO.setComments(commentDTOs);
+
+        var likesCount = post.getLikes().size();
+        postDTO.setLikesCount(likesCount);
         return postDTO;
     }
 

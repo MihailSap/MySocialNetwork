@@ -14,8 +14,6 @@ public class PersonDTO {
 
     private String email;
 
-//    private Date dateOfBirth;
-
     private String phoneNumber;
 
     private String address;
