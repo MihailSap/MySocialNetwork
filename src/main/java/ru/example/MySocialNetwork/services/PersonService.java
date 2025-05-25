@@ -25,6 +25,7 @@ public class PersonService {
         person.setPhoneNumber(personDTO.getPhoneNumber());
         person.setEmail(personDTO.getEmail());
         person.setAddress(personDTO.getAddress());
+        person.setBirthDate(personDTO.getBirthDate());
 
         var newPerson = personRepository.save(person);
         return personMapper.mapToDTO(newPerson);

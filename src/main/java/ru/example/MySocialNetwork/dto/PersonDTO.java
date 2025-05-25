@@ -1,20 +1,28 @@
 package ru.example.MySocialNetwork.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
-
-import java.util.Date;
+import ru.example.MySocialNetwork.validations.constraints.Address;
+import ru.example.MySocialNetwork.validations.constraints.BirthDate;
+import ru.example.MySocialNetwork.validations.constraints.Username;
 
 @Data
 public class PersonDTO {
+
     private long id;
 
+    @Username
     private String username;
 
-    private String password;
-
+    @Email(message = "{validation.errors.person_email}")
     private String email;
 
     private String phoneNumber;
 
+    @Address
     private String address;
+
+    @BirthDate
+    private String birthDate;
 }

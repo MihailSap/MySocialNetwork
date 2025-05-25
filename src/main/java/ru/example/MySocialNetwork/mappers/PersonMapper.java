@@ -14,6 +14,7 @@ public class PersonMapper {
         personDTO.setPhoneNumber(person.getPhoneNumber());
         personDTO.setEmail(person.getEmail());
         personDTO.setAddress(person.getAddress());
+        personDTO.setBirthDate(person.getBirthDate());
         return personDTO;
     }
 }

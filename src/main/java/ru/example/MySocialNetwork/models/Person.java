@@ -2,7 +2,11 @@ package ru.example.MySocialNetwork.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import ru.example.MySocialNetwork.validations.constraints.Address;
+import ru.example.MySocialNetwork.validations.constraints.BirthDate;
+import ru.example.MySocialNetwork.validations.constraints.Username;
 
 import java.util.List;
 
@@ -11,32 +15,35 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "person")
 public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Username
     private String username;
 
+    @NotEmpty(message = "{validation.errors.person_password}")
     private String password;
 
-    @Email
+    @Email(message = "{validation.errors.person_email}")
     private String email;
 
     private String phoneNumber;
 
+    @Address
     private String address;
 
+    @BirthDate
     private String birthDate;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes;
 }

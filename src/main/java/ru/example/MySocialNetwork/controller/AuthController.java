@@ -25,7 +25,6 @@ import ru.example.MySocialNetwork.util.PersonValidator;
 import java.util.List;
 import java.util.Map;
 
-//@Controller
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -44,10 +43,21 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> performRegistration(@RequestBody PersonDTO personDTO,
+    public ResponseEntity<?> performRegistration(@RequestBody @Valid AuthenticationDTO authenticationDTO,
                                           BindingResult bindingResult){
-        var person = convertToPersonFromDTO(personDTO);
+        var person = convertToPersonFromDTO(authenticationDTO);
         personValidator.validate(person, bindingResult);
+
+
+        // Это временное решение
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(Map.of("errors", errors));
+        }
+
         registrationService.register(person);
         return ResponseEntity.ok(Map.of("message", "Регистрация прошла успешно!"));
     }
@@ -71,7 +81,7 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Logout successful!"));
     }
 
-    public Person convertToPersonFromDTO(PersonDTO personDTO){
-        return this.modelMapper.map(personDTO, Person.class);
+    public Person convertToPersonFromDTO(AuthenticationDTO authenticationDTO){
+        return this.modelMapper.map(authenticationDTO, Person.class);
     }
 }
