@@ -3,6 +3,7 @@ package ru.example.MySocialNetwork.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.example.MySocialNetwork.aspects.annotations.RequestTimeLimit;
 import ru.example.MySocialNetwork.dto.PostDTO;
 import ru.example.MySocialNetwork.services.LikeService;
 import ru.example.MySocialNetwork.services.PostService;
@@ -41,6 +42,7 @@ public class PostController {
         return ResponseEntity.ok(Map.of("message", "Пост успешно удалён"));
     }
 
+    @RequestTimeLimit
     @PostMapping("/{id}/like")
     public ResponseEntity<?> likePost(@PathVariable long id){
         var response = likeService.likePost(id);

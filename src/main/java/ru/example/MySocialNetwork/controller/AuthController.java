@@ -48,8 +48,6 @@ public class AuthController {
         var person = convertToPersonFromDTO(authenticationDTO);
         personValidator.validate(person, bindingResult);
 
-
-        // Это временное решение
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getFieldErrors()
                     .stream()
@@ -59,7 +57,7 @@ public class AuthController {
         }
 
         registrationService.register(person);
-        return ResponseEntity.ok(Map.of("message", "Регистрация прошла успешно!"));
+        return ResponseEntity.ok(Map.of("message", "Регистрация выполнена успешно"));
     }
 
     @PostMapping("/login")
@@ -71,14 +69,14 @@ public class AuthController {
         var authentication = authenticationManager.authenticate(authenticationInputToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-        return ResponseEntity.ok(Map.of("message", "Login successful!"));
+        return ResponseEntity.ok(Map.of("message", "Вход выполнен успешно"));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> performLogout(HttpSession session) {
         session.invalidate();
         SecurityContextHolder.clearContext();
-        return ResponseEntity.ok(Map.of("message", "Logout successful!"));
+        return ResponseEntity.ok(Map.of("message", "Выход выполнен успешно"));
     }
 
     public Person convertToPersonFromDTO(AuthenticationDTO authenticationDTO){
