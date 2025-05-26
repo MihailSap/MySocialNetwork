@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.MySocialNetwork.dto.PersonDTO;
+import ru.example.MySocialNetwork.exceptions.ForbiddenException;
 import ru.example.MySocialNetwork.mappers.PersonMapper;
 import ru.example.MySocialNetwork.models.Person;
 import ru.example.MySocialNetwork.repositories.PersonRepository;
@@ -21,6 +22,11 @@ public class PersonService {
     public PersonDTO update(long id, PersonDTO personDTO){
         var person = personRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Пользователь с таким ID не был найден"));
+
+        var activePerson = getActivePerson();
+        if (activePerson.getId() != person.getId()){
+            throw new ForbiddenException("Вы не можете редактировать чужой профиль");
+        }
 
         person.setPhoneNumber(personDTO.getPhoneNumber());
         person.setEmail(personDTO.getEmail());

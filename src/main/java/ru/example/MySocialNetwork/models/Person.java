@@ -8,6 +8,7 @@ import ru.example.MySocialNetwork.validations.constraints.Address;
 import ru.example.MySocialNetwork.validations.constraints.BirthDate;
 import ru.example.MySocialNetwork.validations.constraints.Username;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -39,11 +40,11 @@ public class Person {
     private String birthDate;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts;
+    private List<Publication> publications = new ArrayList<>();
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes;
+    private List<Like> likes = new ArrayList<>();
 }

@@ -29,7 +29,7 @@ public class RequestTimeLimitAspect {
     @Value("${waiting-time}")
     private long waiting_time;
 
-    @Before("@annotation(ru.example.MySocialNetwork.aspects.annotations.RequestTimeLimit)")
+    @Before("@annotation(ru.example.MySocialNetwork.aspects.RequestTimeLimit)")
     public void checkRequestCountInTime(){
         var personId = personService.getActivePerson().getId();
         var now = System.currentTimeMillis();

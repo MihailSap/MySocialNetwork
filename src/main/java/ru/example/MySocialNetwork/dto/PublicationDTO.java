@@ -2,10 +2,11 @@ package ru.example.MySocialNetwork.dto;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class PostDTO {
+public class PublicationDTO {
 
     private long id;
 
@@ -14,6 +15,8 @@ public class PostDTO {
     private String text;
 
     private int likesCount;
+
+    private LocalDateTime createdTime;
 
     private List<CommentDTO> comments;
 }

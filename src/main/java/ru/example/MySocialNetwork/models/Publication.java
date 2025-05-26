@@ -3,6 +3,8 @@ package ru.example.MySocialNetwork.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -10,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Post {
+public class Publication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +22,14 @@ public class Post {
 
     private String text;
 
+    private LocalDateTime createdAt;
+
     @ManyToOne
     private Person person;
 
-    @OneToMany(mappedBy = "post")
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "publication")
+    private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post")
-    private List<Like> likes;
+    @OneToMany(mappedBy = "publication")
+    private List<Like> likes = new ArrayList<>();
 }

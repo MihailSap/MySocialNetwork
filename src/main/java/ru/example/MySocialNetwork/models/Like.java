@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "liked", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"person_id", "post_id"})
+        @UniqueConstraint(columnNames = {"person_id", "publication_id"})
 })
 public class Like {
 
@@ -25,6 +25,6 @@ public class Like {
     private Person person;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @JoinColumn(name = "publication_id")
+    private Publication publication;
 }

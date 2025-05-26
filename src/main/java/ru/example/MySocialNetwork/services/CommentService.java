@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.MySocialNetwork.dto.CommentDTO;
+import ru.example.MySocialNetwork.exceptions.ForbiddenException;
 import ru.example.MySocialNetwork.models.Comment;
 import ru.example.MySocialNetwork.repositories.CommentRepository;
 
@@ -12,7 +13,7 @@ import ru.example.MySocialNetwork.repositories.CommentRepository;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostService postService;
+    private final PublicationService publicationService;
     private final PersonService personService;
 
     @Transactional
@@ -21,8 +22,8 @@ public class CommentService {
         comment.setText(commentDTO.getText());
         var activePerson = personService.getActivePerson();
         comment.setPerson(activePerson);
-        var post = postService.getPost(postId);
-        comment.setPost(post);
+        var post = publicationService.getPublications(postId);
+        comment.setPublication(post);
         commentRepository.save(comment);
         return mapToDTO(comment);
     }
@@ -37,6 +38,7 @@ public class CommentService {
     @Transactional
     public CommentDTO update(long id, CommentDTO commentDTO){
         var comment = commentRepository.findById(id).get();
+        checkRights(comment);
         comment.setText(commentDTO.getText());
         return mapToDTO(comment);
     }
@@ -44,6 +46,15 @@ public class CommentService {
     @Transactional
     public void delete(long id){
         var comment = commentRepository.findById(id).get();
+        checkRights(comment);
         commentRepository.delete(comment);
+    }
+
+    public void checkRights(Comment comment){
+        var commentAuthor = comment.getPerson();
+        var activePerson = personService.getActivePerson();
+        if (!commentAuthor.equals(activePerson)){
+            throw new ForbiddenException("Вы не можете редактировать чужие комментарии");
+        }
     }
 }

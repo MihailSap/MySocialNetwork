@@ -1,4 +1,4 @@
-package ru.example.MySocialNetwork.aspects.annotations;
+package ru.example.MySocialNetwork.aspects;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

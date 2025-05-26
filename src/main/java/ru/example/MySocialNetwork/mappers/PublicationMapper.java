@@ -2,31 +2,32 @@ package ru.example.MySocialNetwork.mappers;
 
 import org.springframework.stereotype.Component;
 import ru.example.MySocialNetwork.dto.CommentDTO;
-import ru.example.MySocialNetwork.dto.PostDTO;
-import ru.example.MySocialNetwork.models.Post;
+import ru.example.MySocialNetwork.dto.PublicationDTO;
+import ru.example.MySocialNetwork.models.Publication;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class PostMapper {
+public class PublicationMapper {
 
-    public PostDTO mapToDTO(Post post){
-        var postDTO = new PostDTO();
-        postDTO.setId(post.getId());
-        postDTO.setTitle(post.getTitle());
-        postDTO.setText(post.getText());
+    public PublicationDTO mapToDTO(Publication publication){
+        var postDTO = new PublicationDTO();
+        postDTO.setId(publication.getId());
+        postDTO.setTitle(publication.getTitle());
+        postDTO.setText(publication.getText());
+        postDTO.setCreatedTime(publication.getCreatedAt());
 
-        var commentDTOs = mapComments(post);
+        var commentDTOs = mapComments(publication);
         postDTO.setComments(commentDTOs);
 
-        var likesCount = post.getLikes().size();
+        var likesCount = publication.getLikes().size();
         postDTO.setLikesCount(likesCount);
         return postDTO;
     }
 
-    public List<CommentDTO> mapComments(Post post){
-        var comments = post.getComments();
+    public List<CommentDTO> mapComments(Publication publication){
+        var comments = publication.getComments();
         if (comments == null){
             return new ArrayList<>();
         }
