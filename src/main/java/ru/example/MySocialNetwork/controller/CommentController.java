@@ -10,12 +10,11 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-//@RequestMapping("/comments")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/posts/{id}/create-comment")
+    @PostMapping("/publications/{id}/create-comment")
     public ResponseEntity<?> create(@PathVariable long id, @RequestBody CommentDTO comment){
         var commentDTO = commentService.create(id, comment);
         return ResponseEntity.ok(Map.of("comment", commentDTO));
@@ -32,9 +31,4 @@ public class CommentController {
         commentService.delete(id);
         return ResponseEntity.ok(Map.of("message", "Комментарий успешно удалён"));
     }
-
-//    @GetMapping("/posts/{id}/comments}")
-//    public ResponseEntity<?> getCommentsOfPost(@PathVariable long id){
-//
-//    }
 }

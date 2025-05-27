@@ -14,6 +14,8 @@ public class PublicationDTO {
 
     private String text;
 
+    private String authorName;
+
     private int likesCount;
 
     private LocalDateTime createdTime;

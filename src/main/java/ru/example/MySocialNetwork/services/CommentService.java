@@ -37,7 +37,8 @@ public class CommentService {
 
     @Transactional
     public CommentDTO update(long id, CommentDTO commentDTO){
-        var comment = commentRepository.findById(id).get();
+        var comment = commentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Комментарий с таким id не найден"));
         checkRights(comment);
         comment.setText(commentDTO.getText());
         return mapToDTO(comment);
@@ -45,7 +46,8 @@ public class CommentService {
 
     @Transactional
     public void delete(long id){
-        var comment = commentRepository.findById(id).get();
+        var comment = commentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Комментарий с таким id не найден"));
         checkRights(comment);
         commentRepository.delete(comment);
     }

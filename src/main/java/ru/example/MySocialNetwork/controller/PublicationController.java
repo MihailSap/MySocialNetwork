@@ -1,11 +1,13 @@
 package ru.example.MySocialNetwork.controller;
 
+import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.example.MySocialNetwork.aspects.RequestTimeLimit;
 import ru.example.MySocialNetwork.dto.PublicationDTO;
 import ru.example.MySocialNetwork.services.LikeService;
+import ru.example.MySocialNetwork.services.MetricsService;
 import ru.example.MySocialNetwork.services.PublicationService;
 
 import java.util.Map;
@@ -17,7 +19,9 @@ public class PublicationController {
 
     private final PublicationService publicationService;
     private final LikeService likeService;
+    private final MetricsService metricsService;
 
+    @Counted(value = "create.publication.requests.counter", description = "Количество попыток создать публикацию")
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody PublicationDTO publicationDTO){
         var newPublicationDTO = publicationService.create(publicationDTO);
@@ -46,6 +50,7 @@ public class PublicationController {
     @PostMapping("/{id}/like")
     public ResponseEntity<?> likePublication(@PathVariable long id){
         var response = likeService.likePublication(id);
+        metricsService.incrementPersonLikeCounter();
         return ResponseEntity.ok(Map.of("message", response));
     }
 

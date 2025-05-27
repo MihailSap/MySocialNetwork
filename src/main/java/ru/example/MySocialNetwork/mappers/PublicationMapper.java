@@ -12,18 +12,19 @@ import java.util.List;
 public class PublicationMapper {
 
     public PublicationDTO mapToDTO(Publication publication){
-        var postDTO = new PublicationDTO();
-        postDTO.setId(publication.getId());
-        postDTO.setTitle(publication.getTitle());
-        postDTO.setText(publication.getText());
-        postDTO.setCreatedTime(publication.getCreatedAt());
+        var publicationDTO = new PublicationDTO();
+        publicationDTO.setId(publication.getId());
+        publicationDTO.setTitle(publication.getTitle());
+        publicationDTO.setText(publication.getText());
+        publicationDTO.setCreatedTime(publication.getCreatedAt());
+        publicationDTO.setAuthorName(publication.getPerson().getUsername());
 
         var commentDTOs = mapComments(publication);
-        postDTO.setComments(commentDTOs);
+        publicationDTO.setComments(commentDTOs);
 
         var likesCount = publication.getLikes().size();
-        postDTO.setLikesCount(likesCount);
-        return postDTO;
+        publicationDTO.setLikesCount(likesCount);
+        return publicationDTO;
     }
 
     public List<CommentDTO> mapComments(Publication publication){
@@ -37,6 +38,7 @@ public class PublicationMapper {
             var commentDTO = new CommentDTO();
             commentDTO.setId(comment.getId());
             commentDTO.setText(comment.getText());
+            commentDTO.setAuthorName(comment.getPerson().getUsername());
             commentDTOList.add(commentDTO);
         }
         return commentDTOList;

@@ -1,7 +1,6 @@
 package ru.example.MySocialNetwork.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import ru.example.MySocialNetwork.validations.constraints.Address;
 import ru.example.MySocialNetwork.validations.constraints.BirthDate;

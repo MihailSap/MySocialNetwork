@@ -1,32 +1,27 @@
 package ru.example.MySocialNetwork.controller;
 
+import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.example.MySocialNetwork.dto.AuthenticationDTO;
-import ru.example.MySocialNetwork.dto.PersonDTO;
 import ru.example.MySocialNetwork.models.Person;
 import ru.example.MySocialNetwork.services.RegistrationService;
 import ru.example.MySocialNetwork.util.PersonValidator;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final PersonValidator personValidator;
@@ -34,22 +29,15 @@ public class AuthController {
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    public AuthController(PersonValidator personValidator, RegistrationService registrationService, ModelMapper modelMapper, AuthenticationManager authenticationManager) {
-        this.personValidator = personValidator;
-        this.registrationService = registrationService;
-        this.modelMapper = modelMapper;
-        this.authenticationManager = authenticationManager;
-    }
-
     @PostMapping("/registration")
-    public ResponseEntity<?> performRegistration(@RequestBody @Valid AuthenticationDTO authenticationDTO,
+    @Timed(value = "registration.requests", description = "Запросы на регистрацию")
+    public ResponseEntity<?> registration(@RequestBody @Valid AuthenticationDTO authenticationDTO,
                                           BindingResult bindingResult){
         var person = convertToPersonFromDTO(authenticationDTO);
         personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getFieldErrors()
+            var errors = bindingResult.getFieldErrors()
                     .stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .toList();
@@ -61,7 +49,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> performLogin(@RequestBody AuthenticationDTO authenticationDTO, HttpSession session){
+    public ResponseEntity<?> login(@RequestBody AuthenticationDTO authenticationDTO, HttpSession session){
         var authenticationInputToken = new UsernamePasswordAuthenticationToken(
                 authenticationDTO.getUsername(), authenticationDTO.getPassword()
         );
@@ -73,7 +61,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> performLogout(HttpSession session) {
+    public ResponseEntity<?> logout(HttpSession session) {
         session.invalidate();
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok(Map.of("message", "Выход выполнен успешно"));
